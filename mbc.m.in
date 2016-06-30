@@ -125,10 +125,9 @@ MBnorm::usage = "MBnorm[x_] for a detailed description see MBmap."
 MBintegrate::usage = "MBintegrate[integrals, kinematics] numerically integrates
 a list of integrals expanded in some variable with the values of the parameters
 as given on the kinematics list. The input should be as produced by MBexpand.
-Multiple integrals are evaluated in Fortran with the help of the CERN library
-implementation of the Gamma and PolyGamma functions and of the Cuhre and Vegas
-integration routines from CUBA. The libraries libmathlib.a, libkernlib.a and
-libcuba.a should be available, the compilation is performed with f77. The output
+Multiple integrals are evaluated in C with the help of the CERN library
+implementation of the Gamma and PolyGamma functions converted to C and of the Cuhre and Vegas
+integration routines from CUBA. The output
 is a list containing the value of the integral and the error estimates on the
 real and imaginary parts. Optionally the contributions of all the numerical
 integrations can be given, if option Debug is set to True. In this case, the
@@ -1014,8 +1013,7 @@ Block[{opt = ParseOptions[MBintegrate, options], greater, tolist,
 
       Close[strm];
 
-    (* Run["gcc -O -o", exec, source, "-L. -lcuba -lm"], *)
-    Run["make ", exec],
+    Run["make -f @abs_top_srcdir@/Makefile ", exec],
   {i, Length[ints]}];
 
   If[NoHigherDimensional /. opt,

@@ -1,2 +1,5 @@
+
+COMPILEFLAGS= -O3
+
 .c.x:
-	$(CC) $? $(CFLAGS) $(LDFLAGS) -lcuba -lm -o $@
+	$(CC) $(COMPILEFLAGS) $(CFLAGS) -I$(abs_top_srcdir) $? $(LDFLAGS) -lcuba -lm -o $@
