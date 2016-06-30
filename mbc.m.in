@@ -1004,7 +1004,7 @@ Block[{opt = ParseOptions[MBintegrate, options], greater, tolist,
 
                 "}\n",
 
-                "printf(\"%24.16f %24.16f %24.16f\\n\", integral[0],error[0],prob[0]);",
+                "printf(\"%24.16f %24.16f %24.16f\\n\", integral[0],error[0],prob[0]);\n",
                 "if(NCOMP == 2)\n", "{\n",
                 "   printf(\"%24.16f %24.16f %24.16f\\n\", integral[1],error[1],prob[1]);",
                 "}\n",
