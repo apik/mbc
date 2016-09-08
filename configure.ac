@@ -12,7 +12,5 @@ AC_SEARCH_LIBS([Cuhre], [cuba],[],
                           AC_MSG_ERROR([Could  not find CUBA library])
                         ])
 
-AC_SUBST([AM_CFLAGS], [-O3 -fpic -Wall -Wextra])
-
 AC_CONFIG_FILES([Makefile mbc.m])
 AC_OUTPUT

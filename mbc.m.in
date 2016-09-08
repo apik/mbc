@@ -824,8 +824,10 @@ MBintegrate[integrals_List, kinematics_List, options___Rule] :=
 Block[{opt = ParseOptions[MBintegrate, options], greater, tolist,
   ints = integrals /. kinematics, intvars, allvars, x, expr, ncomp, flags,
   ints1, sum, pow, rules, ndim, integrand, gams, syms, name, exec, source,
-  strm, val, result, error, i, j, NINT},
+  strm, val, result, error, i, j, NINT, NamePrefixUnique},
 
+      (* Make all executables unique *)
+      NamePrefixUnique = (NamePrefix /. opt)<>CreateUUID[];
   greater[int1_, int2_] := Block[{e1, e2, n1, n2},
     e1 = Exponent[int1, x];
     e2 = Exponent[int2, x];
@@ -901,7 +903,7 @@ Block[{opt = ParseOptions[MBintegrate, options], greater, tolist,
     syms = Table[ToExpression["MBg"<>ToString[j]], {j, Length[gams]}];
     Do[integrand = integrand /. gams[[j]] -> syms[[j]], {j, Length[gams]}];
 
-    name = StringJoin[NamePrefix /. opt, "part", ToString[i]];
+    name = StringJoin[NamePrefixUnique , "part", ToString[i]];
     exec = StringJoin[name, ToString[x], ToString[pow], ".x"];
     source = StringReplace[exec, {".x"->".c"}];
     strm = OpenWrite[source];
@@ -1023,7 +1025,7 @@ Block[{opt = ParseOptions[MBintegrate, options], greater, tolist,
 
   Do[
     pow = Exponent[ints[[i]], x];
-    name = StringJoin[NamePrefix /. opt, "part", ToString[i]];
+    name = StringJoin[NamePrefixUnique, "part", ToString[i]];
     exec = StringJoin[name, ToString[x], ToString[pow], ".x"];
   
     If[Verbose /. opt, Print["Running ", exec]];
