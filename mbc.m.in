@@ -805,7 +805,7 @@ MBcForm[stream_, x_, expression_] :=
           count = StringLength[var] + 3; 
           
           expr = ToString[expression, CForm];
-          expr = StringReplace[expr, {"MB_Private_" -> "", " " -> "","LBR"->"[","RBR"->"]","Complex(0,1)"->"I","Power"->"pow","Log"->"log"}];
+          expr = StringReplace[expr, {"MB_Private_" -> "", " " -> "","LBR"->"[","RBR"->"]","Complex(0,1)"->"I","Power"->"cpow","Log"->"clog"}];
           
           WriteString[stream, expr];
           WriteString[stream, ";\n"]]
