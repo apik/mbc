@@ -923,7 +923,7 @@ Block[{opt = ParseOptions[MBintegrate, options], greater, tolist,
       If[(CubaCores /. opt) > 0,
          WriteString[strm,
                      "#define CUBACORES ", CubaCores /. opt, "\n"
-                    ],
+                    ]
         ];
 
 
