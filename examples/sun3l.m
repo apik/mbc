@@ -4,7 +4,7 @@
 tad3l = Fullintegral[{1}, 
                     {
                         PR[k1, m, 1] 
-                        PR[k2, m, n2]
+                        PR[k2, m, 1]
                         PR[k3, m, 1] 
                         PR[k1+k2+k3, m, 1] 
                     }, 
@@ -24,9 +24,11 @@ rules = MBoptimizedRules[repr, eps -> 0, {}, {eps}];
 
 integrals = MBcontinue[repr, eps -> 0, rules];
 
-ser = MBexpand[{integrals}, 1/Gamma[1+eps]^3, {eps, 0, -1}];
+ser = MBexpand[{integrals}, 1/Gamma[1+eps]^3, {eps, 0, 1}];
 
-MBintegrate[ser, {m -> 1}]
+resmb = MBintegrate[ser, {m -> 1}, MaxNIntegrateDim->1];
+
+Print["Result = ",resmb];
 
 (* ******************************************************************
    

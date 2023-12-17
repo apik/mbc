@@ -804,8 +804,15 @@ MBcForm[stream_, x_, expression_] :=
           WriteString[stream, "      ", var, " = "];
           count = StringLength[var] + 3; 
           
-          expr = ToString[expression, CForm];
-          expr = StringReplace[expr, {"MB_Private_" -> "", " " -> "","LBR"->"[","RBR"->"]","Complex(0,1)"->"I","Power"->"cpow","Log"->"clog"}];
+          expr = ToString[expression  /. {xc_Complex :> Re[xc] + Im1*Im[xc]} , CForm];
+          expr = StringReplace[expr, {
+                  "MB_Private_" -> "",
+                  " " -> "",
+                  "LBR" -> "[","RBR" -> "]",
+                  "Complex(0,1)" -> "I",
+                  "Im1" -> "I",
+                  "Power" -> "cpow",
+                  "Log" -> "clog"}];
           
           WriteString[stream, expr];
           WriteString[stream, ";\n"]]

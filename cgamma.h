@@ -94,8 +94,8 @@ int fct(int f)
 }
 
 
-double complex wpsipg(double complex Z, int K)                                                  {    
-  
+double complex wpsipg(double complex Z, int K)
+{ 
   double complex U,V,H,R,P;                                      
   
   double C[6][5];
