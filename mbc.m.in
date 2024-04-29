@@ -1037,7 +1037,8 @@ Block[{opt = ParseOptions[MBintegrate, options], greater, tolist,
   
     If[Verbose /. opt, Print["Running ", exec]];
 
-    val = Import[StringJoin["! ./", exec], "Table"];
+    (* val = Import[StringJoin["! ./", exec], "Table"]; *)
+    val = Import[StringJoin["! ", exec], "Table"];
     val = If[ncomp == 1, Flatten[val], Table[val[[1,j]]+I*val[[2,j]], {j,3}]];
     sum += x^pow*MBval[Sequence @@ val, i];
 
