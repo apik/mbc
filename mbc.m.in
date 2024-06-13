@@ -237,7 +237,7 @@ Options[MBshiftContours] = {
 
 Options[MBintegrate] = {
     CubaCores  -> 0,
-    NamePrefix -> "MB",
+    NamePrefix -> "./MB",
     PrecisionGoal -> 4,
     AccuracyGoal -> 12,
     MaxPoints -> 1000000,
@@ -811,8 +811,8 @@ MBcForm[stream_, x_, expression_] :=
                   "LBR" -> "[","RBR" -> "]",
                   "Complex(0,1)" -> "I",
                   "Im1" -> "I",
-                  "Power" -> "cpow",
-                  "Log" -> "clog"}];
+                  "Power" -> "cpowl",
+                  "Log" -> "clogl"}];
           
           WriteString[stream, expr];
           WriteString[stream, ";\n"]]
@@ -921,8 +921,8 @@ Block[{opt = ParseOptions[MBintegrate, options], greater, tolist,
       WriteString[strm,
                   "#include \"stdio.h\"\n",
                   "#include \"complex.h\"\n",
-                  "#include \"cgamma.h\"\n",
-                  "#include \"cuba.h\"\n\n"
+                  "#include \"cgammal.h\"\n",
+                  "#include \"cubal.h\"\n\n"
                ];
 
       (* Integrand *)
@@ -958,13 +958,13 @@ Block[{opt = ParseOptions[MBintegrate, options], greater, tolist,
                  ];
       
       WriteString[strm,
-                  "static int Integrand(const int *ndim, const double MBx[], const int *ncomp, double MBf[], void *userdata)\n",
+                  "static int Integrand(const int *ndim, const long double MBx[], const int *ncomp, long double MBf[], void *userdata)\n",
                   "      {\n\n",
-                  "      double complex MBval;\n"];
+                  "      long double complex MBval;\n"];
       Do[WriteString[strm,
-                     "      double complex ", rules[[j,1]], ";\n"], {j, ndim}];
+                     "      long double complex ", rules[[j,1]], ";\n"], {j, ndim}];
       Do[WriteString[strm,
-                     "      double complex ", syms[[j]], ";\n"], {j, Length[syms]}];
+                     "      long double complex ", syms[[j]], ";\n"], {j, Length[syms]}];
       
       WriteString[strm, "\n"];
       Do[MBcForm[strm, rules[[j,1]],
@@ -973,8 +973,8 @@ Block[{opt = ParseOptions[MBintegrate, options], greater, tolist,
       
       WriteString[strm, "// x1 \n"];
       Do[MBcForm[strm, syms[[j]],
-                 N[gams[[j]]] /. {Gamma[z_] -> wgamma[z],PolyGamma[n_,z_] :>
-                                  wpsipg[z,Rationalize[n,0]]}],
+                 N[gams[[j]]] /. {Gamma[z_] -> wgammal[z],PolyGamma[n_,z_] :>
+                                  wpsipgl[z,Rationalize[n,0]]}],
          {j, Length[syms]}];
       
       WriteString[strm, "// x2 \n"];
@@ -986,16 +986,17 @@ Block[{opt = ParseOptions[MBintegrate, options], greater, tolist,
       WriteString[strm, ";\n"];
       
       WriteString[strm,
-                  "      MBf[0] = creal(MBval);\n",
-                  "      if (*ncomp == 2) MBf[*ncomp-1] = cimag(MBval);\n\n",
+                  "      MBf[0] = creall(MBval);\n",
+                  "      if (*ncomp == 2) MBf[*ncomp-1] = cimagl(MBval);\n\n",
                   
                   "      }\n"];
 
       (* Main program *)
             WriteString[strm,
                 "int main()\n", "{\n",
-                "int comp, nregions, neval, fail;\n",
-                "double integral[NCOMP], error[NCOMP], prob[NCOMP];\n",
+                "long long int neval;\n",
+                "int comp, nregions, fail;\n",
+                "long double integral[NCOMP], error[NCOMP], prob[NCOMP];\n",
 
                 "if(NDIM > ", MaxCuhreDim /. opt, ")\n", "{\n",
                 "    Vegas(NDIM, NCOMP, Integrand, USERDATA, NVEC,\n",
@@ -1013,9 +1014,9 @@ Block[{opt = ParseOptions[MBintegrate, options], greater, tolist,
 
                 "}\n",
 
-                "printf(\"%24.16f %24.16f %24.16f\\n\", integral[0],error[0],prob[0]);\n",
+                "printf(\"%24.16LF %24.16LF %24.16LF\\n\", integral[0],error[0],prob[0]);\n",
                 "if(NCOMP == 2)\n", "{\n",
-                "   printf(\"%24.16f %24.16f %24.16f\\n\", integral[1],error[1],prob[1]);",
+                "   printf(\"%24.16LF %24.16LF %24.16LF\\n\", integral[1],error[1],prob[1]);",
                 "}\n",
                 "}\n"
                ];
